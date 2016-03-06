@@ -1,9 +1,14 @@
-#!/usr/bin/env perl
+#!/usr/bin/env perl 
+#Author: Ladislav Babjak
+#VERSION: 1.0
 
+use CsvMod;
 use Getopt::Std;
 getopts('hd:');
 
 my $line = undef;
+my @items = undef;
+my $col = undef;
 my $delimiter = ';';
 
 sub help() {
@@ -37,7 +42,14 @@ else {
 
 
 chomp($line);
-my @items = split(/$delimiter/, $line);
+
+if($delimiter eq ",") {
+    @items = &parse_csv_line($line);
+}
+else {
+    @items = split(/$delimiter/, $line);
+}
+
 
 my $num = 1;
 foreach $col (@items) {
