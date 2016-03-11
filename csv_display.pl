@@ -8,7 +8,11 @@ use Getopt::Std;
 getopts('hd:f:');
 
 
+# my favorit delimiter
 my $delimiter = ';';
+# head of csv file
+my @head = undef;
+my $line = undef;
 
 
 sub help() {
@@ -41,8 +45,32 @@ if($opt_h) {
         exit 0;
 }
 
+if(! $opt_f) {
+        &help();
+        exit 0;
+}
+
 if($opt_d) {
         $delimiter=$opt_d;
+}
+
+if(@ARGV == 1) {
+        open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
+        $line=<FD>;
+}
+else {
+        $line=<>;
+}
+
+
+# head reading...
+chomp($line);
+
+if($delimiter eq ",") {
+    @head = &parse_csv_line($line);
+}
+else {
+    @head = split(/$delimiter/, $line);
 }
 
 
