@@ -8,6 +8,9 @@ use Getopt::Std;
 getopts('hd:f:');
 
 
+my $delimiter = ';';
+
+
 sub help() {
     print << "END_HELP";
 
@@ -37,4 +40,9 @@ if($opt_h) {
         &help();
         exit 0;
 }
+
+if($opt_d) {
+        $delimiter=$opt_d;
+}
+
 
