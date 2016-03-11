@@ -17,9 +17,9 @@ sub help() {
         print "\t-h\tprint this help message\n";
         print "\t-d\tset other then default delimiter ';' for .csv file\n\n";
         print "Some examples:\n";
-        print "csv_columns.pl -d '\|' test_pipe.csv\n";
-        print "csv_columns.pl -d '\t' test_tab.csv\n";
-        print "csv_columns.pl < file.csv\n\n";
+        print "$0 -d '\|' test_pipe.csv\n";
+        print "$0 -d '\t' test_tab.csv\n";
+        print "$0 < file.csv\n\n";
 }
 
 
