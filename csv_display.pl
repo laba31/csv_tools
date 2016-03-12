@@ -85,6 +85,9 @@ sub which_columns($$) {
                 push(@positions, $i);
             }
         }
+        else {
+            push(@positions, ($arg - 1));
+        }
     }
 return @positions;
 }
