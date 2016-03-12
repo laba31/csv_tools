@@ -3,6 +3,7 @@
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
+use Data::Dumper;
 use CsvMod;
 use Getopt::Std;
 getopts('hd:f:');
@@ -13,6 +14,7 @@ my $delimiter = ';';
 # head of csv file
 my @head = undef;
 my $line = undef;
+my @columns = undef;
 
 
 sub help() {
@@ -39,6 +41,56 @@ END_HELP
 }
 
 
+sub parse_head($$) {
+    my($delimiter, $line) = @_;
+
+    chomp($line);
+    my @head;
+
+    if($delimiter eq ",") {
+        @head = &parse_csv_line($line);
+    }
+    else {
+        @head = split(/$delimiter/, $line);
+    }
+
+return @head;
+}
+
+
+sub which_columns($$) {
+    my($arg, $head) = @_;
+
+    my @positions = ();
+
+    # columns by name
+    if($arg =~ /[a-zA-Z]/) {
+    }
+    else{  #only numbers of columns
+        if($arg =~ /,/){  # values comma separeted
+            @positions = split(/,/, $arg);
+            for(my $i = 0; $i < @positions; $i++) {
+                $positions[$i] -= 1; 
+            }
+        }
+        elsif($arg =~ /:/) {  # range of values
+            my($low, $high) = split(/:/, $arg); 
+            for(my $i = ($low - 1); $i < $high; $i++) {
+                push(@positions, $i);
+            }
+        }
+        elsif($arg =~ /-/) {  # range of values
+            my($low, $high) = split(/-/, $arg); 
+            for(my $i = ($low - 1); $i < $high; $i++) {
+                push(@positions, $i);
+            }
+        }
+    }
+return @positions;
+}
+
+
+
 
 if($opt_h) {
         &help();
@@ -63,14 +115,12 @@ else {
 }
 
 
-# head reading...
-chomp($line);
+@head = &parse_head($delimiter, $line);
+@columns = &which_columns($opt_f, \@head);
 
-if($delimiter eq ",") {
-    @head = &parse_csv_line($line);
-}
-else {
-    @head = split(/$delimiter/, $line);
-}
+print "Hlavicka:\n";
+print Dumper(@head);
+print "\n\nVybrane stlpce:\n";
+print Dumper(@columns);
 
 
