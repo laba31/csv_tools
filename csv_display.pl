@@ -41,11 +41,11 @@ END_HELP
 }
 
 
-sub parse_head($$) {
+sub parse_line($$) {
     my($delimiter, $line) = @_;
 
     chomp($line);
-    my @head;
+    my @head = undef;
 
     if($delimiter eq ",") {
         @head = &parse_csv_line($line);
@@ -59,7 +59,7 @@ return @head;
 
 
 sub which_columns($$) {
-    my($arg, $head) = @_;
+    my($arg) = @_;
 
     my @positions = ();
 
@@ -110,20 +110,39 @@ if($opt_d) {
 }
 
 if(@ARGV == 1) {
-        open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
-        $line=<FD>;
+    open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
 }
 else {
-        $line=<>;
+    open(FD, "-") or die "I can not open STDIN\n";
 }
 
+$line=<FD>;
 
-@head = &parse_head($delimiter, $line);
-@columns = &which_columns($opt_f, \@head);
+@head = &parse_line($delimiter, $line);
+@columns = &which_columns($opt_f);
 
 print "Hlavicka:\n";
 print Dumper(@head);
 print "\n\nVybrane stlpce:\n";
 print Dumper(@columns);
 
+
+my @tmp_list = ();
+foreach my $item (@columns) {
+    push(@tmp_list, $head[$item]);
+}
+
+print join($delimiter, @tmp_list) . "\n";
+
+@tmp_list = ();
+while($line=<FD>) {
+    my @full_list = &parse_line($delimiter, $line);
+    foreach my $item (@columns) {
+        push(@tmp_list, $full_list[$item]);
+    }
+    print join($delimiter, @tmp_list) . "\n";
+    @tmp_list = ();
+}
+
+close(FD);
 
