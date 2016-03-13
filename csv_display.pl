@@ -3,7 +3,6 @@
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
-use Data::Dumper;
 use CsvMod;
 use Getopt::Std;
 getopts('hd:f:');
@@ -58,7 +57,7 @@ return @head;
 }
 
 
-sub which_columns($$) {
+sub which_columns($) {
     my($arg) = @_;
 
     my @positions = ();
@@ -93,6 +92,21 @@ return @positions;
 }
 
 
+sub check_range($$) {
+    my($columns, $head) = @_;
+
+    my $ret_cod = 0;
+    my $max_pos = @$head;
+    $max_pos--;
+
+    foreach my $item (@$columns) {
+        if(($item < 0) or ($item > $max_pos)) {
+            $ret_cod = -1;
+        }
+    }
+return $ret_cod;
+}
+
 
 
 if($opt_h) {
@@ -121,11 +135,10 @@ $line=<FD>;
 @head = &parse_line($delimiter, $line);
 @columns = &which_columns($opt_f);
 
-print "Hlavicka:\n";
-print Dumper(@head);
-print "\n\nVybrane stlpce:\n";
-print Dumper(@columns);
-
+if((&check_range(\@columns, \@head)) == -1) {
+    print "\nRange of choice fields is wrong.\n";
+    exit 1;
+}
 
 my @tmp_list = ();
 foreach my $item (@columns) {
