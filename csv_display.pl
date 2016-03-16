@@ -100,7 +100,7 @@ else {
 $line=<FD>;
 
 @head = &parse_line($delimiter, $line);
-@columns = &which_columns($opt_f);
+@columns = &which_columns($opt_f, \@head);
 
 if((&check_range(\@columns, \@head)) == -1) {
     print "\nRange of choice fields is wrong.\n";

@@ -51,37 +51,114 @@ return @list;
 }
 
 
-sub which_columns($) {
+sub which_columns($$) {
+    my($arg, $head) = @_;
+
+    my @positions = undef;
+
+    # columns by name
+    if($arg =~ /[a-zA-ZľščťžýáíéúňôĽŠČŤŽÝÁÍÉÚŇÔ]/) {
+        @positions = &columns_by_name($arg, \@$head);
+    } else {
+        @positions = &columns_by_number($arg);
+    }
+
+return @positions;
+}
+
+
+sub columns_by_name($$) {
+    my($arg, $head) = @_;
+
+    my @columns = undef;
+    my @indexes = ();
+
+    if($arg =~ /,/){  # values comma separated
+        @columns = split(/,/, $arg);
+        foreach my $item (@columns) {
+            my $i = &return_index_from_list($item, \@$head);
+            if($i > -1) {
+                push(@indexes, $i);
+            }
+        }
+    }
+    elsif($arg =~ /:/) { # range of values
+        my($first, $last) = split(/:/, $arg);
+        my $low  = &return_index_from_list($first, \@$head);
+        my $high = &return_index_from_list($last, \@$head);
+        for(my $i = $low; $i < ($high + 1); $i++) {
+            push(@indexes, $i);
+        }
+    }
+    elsif($arg =~ /-/) { # range of values
+        my($first, $last) = split(/-/, $arg);
+        my $low  = &return_index_from_list($first, \@$head);
+        my $high = &return_index_from_list($last, \@$head);
+        for(my $i = $low; $i < ($high + 1); $i++) {
+            push(@indexes, $i);
+        }
+    }
+    else {
+        my $i = &return_index_from_list($arg, \@$head);
+        push(@indexes, $i);
+    }
+
+return @indexes;
+}
+
+
+sub return_index_from_list($$) {
+    my($string, $list) = @_;
+
+    my $index = 0;
+    my $success = -1;
+
+    foreach my $item (@$list) {
+        if($item =~ /$string/) {
+            $success = 1;
+            last;
+        }
+        else {
+            $index++;
+        }
+    }
+
+    if($success == 1) {
+        return $index;
+    }
+    else {
+        return -1;
+    }
+}
+
+
+sub columns_by_number($) {
     my($arg) = @_;
 
     my @positions = ();
 
-    # columns by name
-    if($arg =~ /[a-zA-Z]/) {
-    }
-    else{  #only numbers of columns
-        if($arg =~ /,/){  # values comma separeted
-            @positions = split(/,/, $arg);
-            for(my $i = 0; $i < @positions; $i++) {
-                $positions[$i] -= 1; 
-            }
-        }
-        elsif($arg =~ /:/) {  # range of values
-            my($low, $high) = split(/:/, $arg); 
-            for(my $i = ($low - 1); $i < $high; $i++) {
-                push(@positions, $i);
-            }
-        }
-        elsif($arg =~ /-/) {  # range of values
-            my($low, $high) = split(/-/, $arg); 
-            for(my $i = ($low - 1); $i < $high; $i++) {
-                push(@positions, $i);
-            }
-        }
-        else {
-            push(@positions, ($arg - 1));
+    if($arg =~ /,/){  # values comma separated
+        @positions = split(/,/, $arg);
+        for(my $i = 0; $i < @positions; $i++) {
+            $positions[$i] -= 1; 
         }
     }
+    elsif($arg =~ /:/) {  # range of values
+        my($low, $high) = split(/:/, $arg); 
+        for(my $i = ($low - 1); $i < $high; $i++) {
+            push(@positions, $i);
+        }
+    }
+    elsif($arg =~ /-/) {  # range of values
+        my($low, $high) = split(/-/, $arg); 
+        for(my $i = ($low - 1); $i < $high; $i++) {
+            push(@positions, $i);
+        }
+    }
+    else {
+        push(@positions, ($arg - 1));
+    }
+
 return @positions;
 }
 
