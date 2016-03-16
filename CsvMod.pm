@@ -74,7 +74,7 @@ sub columns_by_name($$) {
     my @indexes = ();
 
     if($arg =~ /,/){  # values comma separated
-        @columns = split(/,/, $arg);
+        @columns = &parse_csv_line($arg);
         foreach my $item (@columns) {
             my $i = &return_index_from_list($item, \@$head);
             if($i > -1) {
