@@ -5,11 +5,12 @@
 
 use CsvMod;
 use Getopt::Std;
-getopts('hd:f:');
+getopts('hd:f:n:');
 
 
 # my favorit delimiter
 my $delimiter = ';';
+my $new_delimiter = ';';
 # head of csv file
 my @head = undef;
 my $line = undef;
@@ -28,12 +29,14 @@ Without last parameter filename script read standard input
                 1-3 or 1:3 are same for range of values
                 4,2,8 columns for selection
                 id,name,age columns for selection by name
+        -n      delimiter for output, usefull for conversion format
 
 Some examples:
 
 $0 -d ',' -f 1-5
 $0 -f 2,3,5
 $0 -d '\t' -f 1:3
+$0 -d '\t' -n ':' -f 1:3
 $0 -f id,name,age
 
 END_HELP
@@ -59,18 +62,33 @@ return @head;
 
 
 if($opt_h) {
-        &help();
-        exit 0;
+    &help();
+    exit 0;
 }
 
 if(! $opt_f) {
-        &help();
-        exit 0;
+    &help();
+    exit 0;
 }
 
 if($opt_d) {
-        $delimiter=$opt_d;
+    if($opt_d eq "\\t") {
+        $new_delimiter = $delimiter = "\t";
+    }
+    else {
+        $new_delimiter = $delimiter = $opt_d;
+    }
 }
+
+if($opt_n) {
+    if($opt_n eq "\\t") {
+        $new_delimiter = "\t";
+    }
+    else {
+        $new_delimiter = $opt_n;
+    }
+}
+
 
 if(@ARGV == 1) {
     open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
@@ -94,7 +112,7 @@ foreach my $item (@columns) {
     push(@tmp_list, $head[$item]);
 }
 
-print join($delimiter, @tmp_list) . "\n";
+print join($new_delimiter, @tmp_list) . "\n";
 
 @tmp_list = ();
 while($line=<FD>) {
@@ -102,7 +120,7 @@ while($line=<FD>) {
     foreach my $item (@columns) {
         push(@tmp_list, $full_list[$item]);
     }
-    print join($delimiter, @tmp_list) . "\n";
+    print join($new_delimiter, @tmp_list) . "\n";
     @tmp_list = ();
 }
 
