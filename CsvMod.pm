@@ -2,7 +2,7 @@ package CsvMod;
 
 use Exporter;
 @ISA = qw(Exporter);
-@EXPORT = qw(&parse_csv_line &which_columns &check_range);
+@EXPORT = qw(&parse_csv_line &which_columns &check_range &which_columns_regexp);
 $VERSION = 1.0;
 
 
@@ -129,6 +129,55 @@ sub return_index_from_list($$) {
     else {
         return -1;
     }
+}
+
+
+sub return_index_by_regexp($$$) {
+    my($string, $head, $case_sensitive) = @_;
+
+    my $index = 0;
+    my @indexes = ();
+
+    if($case_sensitive > -1) {
+        foreach my $item (@$head) {
+            if($item =~ /$string/i) {
+                push(@indexes, $index);
+            }
+            $index++;
+        }
+    }
+    else {
+        foreach my $item (@$head) {
+            if($item =~ /$string/) {
+                push(@indexes, $index);
+            }
+            $index++;
+        }
+    }
+
+return @indexes;
+}
+
+
+sub which_columns_regexp($$$) {
+    my($arg, $head, $case_sensitive) = @_;
+
+    my @columns_regexp = undef;
+    my @indexes = ();
+
+    if($arg =~ /,/){  # values comma separated
+        my @columns_regexp = split(/,/, $arg);
+    }
+    else {
+        @columns_regexp = ();
+        push(@columns_regexp, $arg);
+    }
+
+    foreach my $item (@columns_regexp) {
+       push(@indexes, &return_index_by_regexp($item, \@$head, $case_sensitive)); 
+    }
+
+return @indexes;
 }
 
 

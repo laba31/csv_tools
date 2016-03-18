@@ -5,7 +5,7 @@
 
 use CsvMod;
 use Getopt::Std;
-getopts('hd:f:n:');
+getopts('hd:f:n:r:i');
 
 
 # my favorit delimiter
@@ -15,6 +15,7 @@ my $new_delimiter = ';';
 my @head = undef;
 my $line = undef;
 my @columns = undef;
+my $case_sensitive = -1;
 
 
 sub help() {
@@ -30,6 +31,8 @@ Without last parameter filename script read standard input
                 4,2,8 columns for selection
                 id,name,age columns for selection by name
         -n      delimiter for output, usefull for conversion format
+        -r      name of columns as regexp
+        -i      ignore case sensitive, It makes sense only using with the parameter -r
 
 Some examples:
 
@@ -38,6 +41,7 @@ $0 -f 2,3,5
 $0 -d '\t' -f 1:3
 $0 -d '\t' -n ':' -f 1:3
 $0 -f id,name,age
+$0 -r name,date,address -i
 
 END_HELP
 }
@@ -66,8 +70,18 @@ if($opt_h) {
     exit 0;
 }
 
-if(! $opt_f) {
+if((! $opt_f) and (! $opt_r)) {
     &help();
+    exit 0;
+}
+
+if($opt_f and $opt_r) {
+    &help();
+    exit 0;
+}
+
+if($opt_i and (! $opt_r)) {
+    print "parameter -i makes sense only using with parameter -r\n";
     exit 0;
 }
 
@@ -89,6 +103,10 @@ if($opt_n) {
     }
 }
 
+if($opt_i) {
+    $case_sensitive = 1;
+}
+
 
 if(@ARGV == 1) {
     open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
@@ -100,10 +118,15 @@ else {
 $line=<FD>;
 
 @head = &parse_line($delimiter, $line);
-@columns = &which_columns($opt_f, \@head);
+if($opt_f) {
+    @columns = &which_columns($opt_f, \@head);
+}
+else {
+    @columns = &which_columns_regexp($opt_r, \@head, $case_sensitive);
+}
 
 if((&check_range(\@columns, \@head)) == -1) {
-    print "\nRange of choice fields is wrong.\n";
+    print "Range of choice fields is wrong.\n";
     exit 1;
 }
 
