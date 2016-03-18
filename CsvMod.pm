@@ -114,7 +114,7 @@ sub return_index_from_list($$) {
     my $success = -1;
 
     foreach my $item (@$list) {
-        if($item =~ /$string/) {
+        if($item eq $string) {
             $success = 1;
             last;
         }
