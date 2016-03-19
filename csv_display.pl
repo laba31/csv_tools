@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 #Author: Ladislav Babjak
 #VERSION: 1.0
