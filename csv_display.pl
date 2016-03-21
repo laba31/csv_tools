@@ -38,8 +38,8 @@ Some examples:
 
 $0 -d ',' -f 1-5
 $0 -f 2,3,5
-$0 -d '\t' -f 1:3
-$0 -d '\t' -n ':' -f 1:3
+$0 -d '\\t' -f 1:3
+$0 -d '\\t' -n ':' -f 1:3
 $0 -f id,name,age
 $0 -r name,date,address -i
 
