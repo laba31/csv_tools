@@ -47,22 +47,6 @@ END_HELP
 }
 
 
-sub parse_line($$) {
-    my($delimiter, $line) = @_;
-
-    chomp($line);
-    my @head = undef;
-
-    if($delimiter eq ",") {
-        @head = &parse_csv_line($line);
-    }
-    else {
-        @head = split(/$delimiter/, $line);
-    }
-
-return @head;
-}
-
 
 
 if($opt_h) {

@@ -2,8 +2,25 @@ package CsvMod;
 
 use Exporter;
 @ISA = qw(Exporter);
-@EXPORT = qw(&parse_csv_line &which_columns &check_range &which_columns_regexp);
+@EXPORT = qw(&parse_csv_line &which_columns &check_range &which_columns_regexp &parse_line);
 $VERSION = 1.0;
+
+
+sub parse_line($$) {
+    my($delimiter, $line) = @_;
+
+    chomp($line);
+    my @head = undef;
+
+    if($delimiter eq ",") {
+        @head = &parse_csv_line($line);
+    }
+    else {
+        @head = split(/$delimiter/, $line);
+    }
+
+return @head;
+}
 
 
 sub parse_csv_line($) {
