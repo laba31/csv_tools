@@ -22,8 +22,8 @@ sub help() {
 Usage $0 [OPTION]... [filename.csv]
 Without last parameter filename script read standard input
 
-    -h      print this help message
-    -d      set other then default delimiter ';' for .csv file
+    -h  print this help message
+    -d  set other then default delimiter ';' for .csv file
     -e  print warning message when column is empty
     -w  print warning message when column include only white characters
 
