@@ -13,6 +13,7 @@ my $check_empty_column = undef;
 my $check_white_chars = undef;
 my $line = undef;
 my @head = undef;
+my $num_head_columns = undef;
 
 
 sub help() {
@@ -59,4 +60,26 @@ else {
 
 $line=<FD>;
 @head = &parse_line($delimiter, $line);
+$num_head_columns = @head;
+
+if($num_head_columns < 2) {
+    print "CSV with less the 2 columns?\n";
+    print "What's the point?\n";
+    exit 1;
+}
+
+
+my $line_position = 2;
+
+while($line=<FD>) {
+    my @line_items = &parse_line($delimiter, $line);
+    my $num_line_columns = @line_items;
+
+    if($num_line_columns != $num_head_columns) {
+        print "row $line_position has $num_line_columns columns and header has $num_head_columns columns\n";
+    }
+
+$line_position++;
+}
+
 
