@@ -5,7 +5,7 @@
 
 use CsvMod;
 use Getopt::Std;
-getopts('hd:');
+getopts('hd:ew');
 
 
 my $delimiter = ';';
@@ -77,6 +77,19 @@ while($line=<FD>) {
 
     if($num_line_columns != $num_head_columns) {
         print "row $line_position has $num_line_columns columns and header has $num_head_columns columns\n";
+    }
+
+    if($check_white_chars or $check_empty_column) {
+        my $column = 1;
+        foreach my $item (@line_items) {
+            if($check_empty_column and (($item eq "") or ($item eq"\"\""))) {
+                print "row $line_position column $column is empty\n";
+            }
+            elsif($check_white_chars and ($item =~ /^\s+$/)) {
+                print "row $line_position column $column included only white characters\n";
+            }
+            $column++;
+        }
     }
 
 $line_position++;
