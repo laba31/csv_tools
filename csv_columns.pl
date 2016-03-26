@@ -2,6 +2,7 @@
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
+use strict;
 use CsvMod;
 use Getopt::Std;
 getopts('hd:');
@@ -23,13 +24,13 @@ sub help() {
 }
 
 
-if($opt_h) {
+if($::opt_h) {
         &help();
         exit 0;
 }
 
-if($opt_d) {
-        $delimiter=$opt_d;
+if($::opt_d) {
+        $delimiter=$::opt_d;
 }
 
 if(@ARGV == 1) {
