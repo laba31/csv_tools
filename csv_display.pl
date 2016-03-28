@@ -3,6 +3,7 @@
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
+use strict;
 use CsvMod;
 use Getopt::Std;
 getopts('hd:f:n:r:i');
@@ -49,45 +50,45 @@ END_HELP
 
 
 
-if($opt_h) {
+if($::opt_h) {
     &help();
     exit 0;
 }
 
-if((! $opt_f) and (! $opt_r)) {
+if((! $::opt_f) and (! $::opt_r)) {
     &help();
     exit 0;
 }
 
-if($opt_f and $opt_r) {
+if($::opt_f and $::opt_r) {
     &help();
     exit 0;
 }
 
-if($opt_i and (! $opt_r)) {
+if($::opt_i and (! $::opt_r)) {
     print "parameter -i makes sense only using with parameter -r\n";
     exit 0;
 }
 
-if($opt_d) {
-    if($opt_d eq "\\t") {
+if($::opt_d) {
+    if($::opt_d eq "\\t") {
         $new_delimiter = $delimiter = "\t";
     }
     else {
-        $new_delimiter = $delimiter = $opt_d;
+        $new_delimiter = $delimiter = $::opt_d;
     }
 }
 
-if($opt_n) {
-    if($opt_n eq "\\t") {
+if($::opt_n) {
+    if($::opt_n eq "\\t") {
         $new_delimiter = "\t";
     }
     else {
-        $new_delimiter = $opt_n;
+        $new_delimiter = $::opt_n;
     }
 }
 
-if($opt_i) {
+if($::opt_i) {
     $case_sensitive = 1;
 }
 
@@ -102,11 +103,11 @@ else {
 $line=<FD>;
 
 @head = &parse_line($delimiter, $line);
-if($opt_f) {
-    @columns = &which_columns($opt_f, \@head);
+if($::opt_f) {
+    @columns = &which_columns($::opt_f, \@head);
 }
 else {
-    @columns = &which_columns_regexp($opt_r, \@head, $case_sensitive);
+    @columns = &which_columns_regexp($::opt_r, \@head, $case_sensitive);
 }
 
 if((&check_range(\@columns, \@head)) == -1) {
