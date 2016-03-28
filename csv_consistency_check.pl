@@ -1,8 +1,9 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
+use strict;
 use CsvMod;
 use Getopt::Std;
 getopts('hd:ew');
@@ -32,20 +33,20 @@ END_OF_HELP
 
 
 
-if($opt_h) {
+if($::opt_h) {
     &help();
     exit 0;
 }
 
-if($opt_d) {
-    $delimiter = $opt_d;
+if($::opt_d) {
+    $delimiter = $::opt_d;
 }
 
-if($opt_e) {
+if($::opt_e) {
     $check_empty_column = 1;
 }
 
-if($opt_w) {
+if($::opt_w) {
     $check_white_chars = 1;
 }
 
