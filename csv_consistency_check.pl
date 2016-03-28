@@ -18,7 +18,7 @@ my $num_head_columns = undef;
 
 
 sub help() {
-    print << 'END_OF_HELP';
+    print << "END_OF_HELP";
 
 Usage $0 [OPTION]... [filename.csv]
 Without last parameter filename script read standard input
