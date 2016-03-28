@@ -15,6 +15,7 @@ my $check_white_chars = undef;
 my $line = undef;
 my @head = undef;
 my $num_head_columns = undef;
+my $err = 0;
 
 
 sub help() {
@@ -78,6 +79,7 @@ while($line=<FD>) {
 
     if($num_line_columns != $num_head_columns) {
         print "row $line_position has $num_line_columns columns and header has $num_head_columns columns\n";
+        $err = 1;
     }
 
     if($check_white_chars or $check_empty_column) {
@@ -85,9 +87,11 @@ while($line=<FD>) {
         foreach my $item (@line_items) {
             if($check_empty_column and (($item eq "") or ($item eq"\"\""))) {
                 print "row $line_position column $column is empty\n";
+                $err = 1;
             }
             elsif($check_white_chars and ($item =~ /^\s+$/)) {
                 print "row $line_position column $column included only white characters\n";
+                $err = 1;
             }
             $column++;
         }
@@ -96,4 +100,7 @@ while($line=<FD>) {
 $line_position++;
 }
 
+unless($err) {
+    print "Everythins is OK. I hope, but I am not perfect.\n";
+}
 
