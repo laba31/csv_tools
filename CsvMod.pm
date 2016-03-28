@@ -232,6 +232,10 @@ return @positions;
 sub check_range($$) {
     my($columns, $head) = @_;
 
+    if((scalar @$columns) == 0) {
+        return -1;
+    }
+
     my $ret_cod = 0;
     my $max_pos = @$head;
     $max_pos--;
