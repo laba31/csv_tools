@@ -22,7 +22,7 @@ sub help() {
     print << "END_OF_HELP";
 
 Usage $0 [OPTION]... [filename.csv]
-Without last parameter filename script read standard input
+Without last parameter filename.csv script read standard input
 
     -h  print this help message
     -d  set other then default delimiter ';' for .csv file

@@ -14,7 +14,7 @@ my $delimiter = ';';
 
 sub help() {
         print "\nUsage $0 [OPTION]... [filename.csv]\n";
-        print "Without last parameter filename script read standard input\n\n";
+        print "Without last parameter filename.csv script read standard input\n\n";
         print "\t-h\tprint this help message\n";
         print "\t-d\tset other then default delimiter ';' for .csv file\n\n";
         print "Some examples:\n";
