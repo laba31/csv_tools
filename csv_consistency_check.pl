@@ -1,5 +1,4 @@
 #!/usr/bin/env perl
-
 #Author: Ladislav Babjak
 #VERSION: 1.0
 
@@ -8,13 +7,18 @@ use CsvMod;
 use Getopt::Std;
 getopts('hd:ew');
 
-
+# my favorit delimiter
 my $delimiter = ';';
+# variables for inspections
 my $check_empty_column = undef;
 my $check_white_chars = undef;
+# for reading line from file
 my $line = undef;
+# header of csv file
 my @head = undef;
+# count of columns in header
 my $num_head_columns = undef;
+# detect error
 my $err = 0;
 
 
@@ -39,6 +43,7 @@ if($::opt_h) {
     exit 0;
 }
 
+# set other then default(;) delimiter
 if($::opt_d) {
     $delimiter = $::opt_d;
 }
@@ -59,8 +64,9 @@ else {
     open(FD, "-") or die "I can not open STDIN\n";
 }
 
-
+# first line = header
 $line=<FD>;
+# header in array
 @head = &parse_line($delimiter, $line);
 $num_head_columns = @head;
 
@@ -73,15 +79,18 @@ if($num_head_columns < 2) {
 
 my $line_position = 2;
 
+# main loop
 while($line=<FD>) {
     my @line_items = &parse_line($delimiter, $line);
     my $num_line_columns = @line_items;
 
+    # inspection of count of columns in row
     if($num_line_columns != $num_head_columns) {
         print "row $line_position has $num_line_columns columns and header has $num_head_columns columns\n";
         $err = 1;
     }
 
+    # inspection of white character and empty value
     if($check_white_chars or $check_empty_column) {
         my $column = 1;
         foreach my $item (@line_items) {
@@ -100,7 +109,9 @@ while($line=<FD>) {
 $line_position++;
 }
 
+# The grand finale
 unless($err) {
     print "Everythins is OK. I hope, but I am not perfect.\n";
 }
 
+close(FD);
