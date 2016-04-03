@@ -11,10 +11,13 @@ getopts('hd:f:n:r:i');
 
 # my favorit delimiter
 my $delimiter = ';';
+# delimiter for outputs
 my $new_delimiter = ';';
-# head of csv file
+# header of csv file
 my @head = undef;
+# for reading line from file
 my $line = undef;
+# which columns selected
 my @columns = undef;
 my $case_sensitive = -1;
 
@@ -70,7 +73,9 @@ if($::opt_i and (! $::opt_r)) {
     exit 0;
 }
 
+# delimiter handling
 if($::opt_d) {
+    # I don't know why, but it is important tabulator handling
     if($::opt_d eq "\\t") {
         $new_delimiter = $delimiter = "\t";
     }
@@ -92,7 +97,7 @@ if($::opt_i) {
     $case_sensitive = 1;
 }
 
-
+# .csv filename is required too
 if(@ARGV == 1) {
     open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
 }
@@ -100,8 +105,10 @@ else {
     open(FD, "-") or die "I can not open STDIN\n";
 }
 
+# first line = header
 $line=<FD>;
 
+# header in array
 @head = &parse_line($delimiter, $line);
 if($::opt_f) {
     @columns = &which_columns($::opt_f, \@head);
@@ -110,11 +117,13 @@ else {
     @columns = &which_columns_regexp($::opt_r, \@head, $case_sensitive);
 }
 
+# check range of columns
 if((&check_range(\@columns, \@head)) == -1) {
     print "Range of choice fields is wrong.\n";
     exit 1;
 }
 
+# assembling and print header
 my @tmp_list = ();
 foreach my $item (@columns) {
     push(@tmp_list, $head[$item]);
@@ -122,6 +131,7 @@ foreach my $item (@columns) {
 
 print join($new_delimiter, @tmp_list) . "\n";
 
+# main loop
 @tmp_list = ();
 while($line=<FD>) {
     my @full_list = &parse_line($delimiter, $line);
@@ -133,4 +143,3 @@ while($line=<FD>) {
 }
 
 close(FD);
-
