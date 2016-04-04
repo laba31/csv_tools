@@ -6,6 +6,7 @@ use Exporter;
 $VERSION = 1.0;
 
 
+# which of the method for parsing will be used
 sub parse_line($$) {
     my($delimiter, $line) = @_;
 
@@ -22,7 +23,7 @@ sub parse_line($$) {
 return @head;
 }
 
-
+# parsing tru .csv file, but new line in column not accepted
 sub parse_csv_line($) {
     my($line) = @_;
 
@@ -35,29 +36,37 @@ sub parse_csv_line($) {
     my $i = 0;
     while(1) {
 
+            # first character
             $ch = substr($line, $i, 1);
 
+            # start item with "
             if($ch eq "\"") {
+                    # find delimiter
                     $new_i = index($line, "\",", ($i));
+                    # It's not over
                     if($new_i != -1) {
                             $offset = ($new_i - $i - 1);
+                            # insert item to list
                             push(@list, substr($line, ($i+1), $offset));
                             $i = ($new_i + 2);
                             next;
-                    } else {
+                    } else {   # last column in row
                             $offset = ((length($line) - 2) - $i);
+                            # insert item to list
                             push(@list, substr($line, ($i+1), $offset));
                             last;
                     }
-            } else {
+            } else {  # item is not between ""
                     $new_i = index($line, ",", ($i));
                     if($new_i != -1) {
                         $offset = ($new_i - $i);
+                         # insert item to list
                         push(@list, substr($line, $i, $offset ));
                         $i = ($new_i + 1);
                         next;
-                    } else {
+                    } else {    # last columnt in row
                             $offset = ((length($line)) - $i);
+                            # insert item to list
                             push(@list, substr($line, $i, $offset));
                             last;
                     }
@@ -83,7 +92,7 @@ sub which_columns($$) {
 return @positions;
 }
 
-
+# select columns by name
 sub columns_by_name($$) {
     my($arg, $head) = @_;
 
@@ -123,7 +132,7 @@ sub columns_by_name($$) {
 return @indexes;
 }
 
-
+# return column position, arguments are name and list
 sub return_index_from_list($$) {
     my($string, $list) = @_;
 
@@ -148,7 +157,7 @@ sub return_index_from_list($$) {
     }
 }
 
-
+# return column position, arguments are name as regexp, header of .csv file and list (columns in row)
 sub return_index_by_regexp($$$) {
     my($string, $head, $case_sensitive) = @_;
 
@@ -228,7 +237,7 @@ sub columns_by_number($) {
 return @positions;
 }
 
-
+# column position must be in allowed range
 sub check_range($$) {
     my($columns, $head) = @_;
 
