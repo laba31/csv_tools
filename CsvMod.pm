@@ -1,4 +1,6 @@
 package CsvMod;
+#Author: Ladislav Babjak
+#VERSION: 1.0
 
 use Exporter;
 @ISA = qw(Exporter);
