@@ -19,7 +19,7 @@ sub parse_line($$) {
         @head = &parse_csv_line($line);
     }
     else {
-        @head = split(/$delimiter/, $line);
+        @head = split(/$delimiter/, $line, -1);
     }
 
 return @head;
@@ -111,7 +111,7 @@ sub columns_by_name($$) {
         }
     }
     elsif($arg =~ /:/) { # range of values
-        my($first, $last) = split(/:/, $arg);
+        my($first, $last) = split(/:/, $arg, -1);
         my $low  = &return_index_from_list($first, \@$head);
         my $high = &return_index_from_list($last, \@$head);
         for(my $i = $low; $i < ($high + 1); $i++) {
@@ -119,7 +119,7 @@ sub columns_by_name($$) {
         }
     }
     elsif($arg =~ /-/) { # range of values
-        my($first, $last) = split(/-/, $arg);
+        my($first, $last) = split(/-/, $arg, -1);
         my $low  = &return_index_from_list($first, \@$head);
         my $high = &return_index_from_list($last, \@$head);
         for(my $i = $low; $i < ($high + 1); $i++) {
@@ -194,7 +194,7 @@ sub which_columns_regexp($$$) {
     my @indexes = ();
 
     if($arg =~ /,/){  # values comma separated
-        my @columns_regexp = split(/,/, $arg);
+        my @columns_regexp = split(/,/, $arg, -1);
     }
     else {
         @columns_regexp = ();
@@ -215,19 +215,19 @@ sub columns_by_number($) {
     my @positions = ();
 
     if($arg =~ /,/){  # values comma separated
-        @positions = split(/,/, $arg);
+        @positions = split(/,/, $arg, -1);
         for(my $i = 0; $i < @positions; $i++) {
             $positions[$i] -= 1; 
         }
     }
     elsif($arg =~ /:/) {  # range of values
-        my($low, $high) = split(/:/, $arg); 
+        my($low, $high) = split(/:/, $arg, -1); 
         for(my $i = ($low - 1); $i < $high; $i++) {
             push(@positions, $i);
         }
     }
     elsif($arg =~ /-/) {  # range of values
-        my($low, $high) = split(/-/, $arg); 
+        my($low, $high) = split(/-/, $arg, -1); 
         for(my $i = ($low - 1); $i < $high; $i++) {
             push(@positions, $i);
         }

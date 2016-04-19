@@ -48,7 +48,7 @@ if($delimiter eq ",") {
     @items = &parse_csv_line($line);
 }
 else {
-    @items = split(/$delimiter/, $line);
+    @items = split(/$delimiter/, $line, -1);
 }
 
 
