@@ -1,7 +1,12 @@
 #!/usr/bin/env perl
-
 #Author: Ladislav Babjak
 #VERSION: 1.0
+
+# calling module from everywhere
+BEGIN {
+    $0 =~ m/(^.*\/)/;
+    unshift @INC, $1;
+}
 
 use strict;
 use CsvMod;
