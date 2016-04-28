@@ -11,7 +11,7 @@ BEGIN {
 use strict;
 use CsvMod;
 use Getopt::Std;
-getopts('hd:ew');
+getopts('hd:ewn');
 
 # my favorit delimiter
 my $delimiter = ';';
@@ -26,6 +26,8 @@ my @head = undef;
 my $num_head_columns = undef;
 # detect error
 my $err = 0;
+# how print columns
+my $ncol = undef;
 
 
 sub help() {
@@ -38,6 +40,7 @@ Without last parameter filename.csv script read standard input
     -d  set other then default delimiter ';' for .csv file
     -e  print warning message when column is empty
     -w  print warning message when column include only white characters
+    -n  display bad columns as number, default as name
 
 END_OF_HELP
 }
@@ -60,6 +63,10 @@ if($::opt_e) {
 
 if($::opt_w) {
     $check_white_chars = 1;
+}
+
+if($::opt_n) {
+    $ncol = 1;
 }
 
 
@@ -101,11 +108,21 @@ while($line=<FD>) {
         my $column = 1;
         foreach my $item (@line_items) {
             if($check_empty_column and (($item eq "") or ($item eq"\"\""))) {
-                print "row $line_position column $column is empty\n";
+                if($ncol) {
+                    print "row $line_position column $column is empty\n";
+                }
+                else {
+                    print "row $line_position column $head[$column - 1] is empty\n";
+                }
                 $err = 1;
             }
             elsif($check_white_chars and ($item =~ /^\s+$/)) {
-                print "row $line_position column $column included only white characters\n";
+                if($ncol) {
+                    print "row $line_position column $column included only white characters\n";
+                }
+                else {
+                    print "row $line_position column $head[$column - 1] included only white characters\n";
+                }
                 $err = 1;
             }
             $column++;
