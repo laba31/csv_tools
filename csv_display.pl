@@ -37,6 +37,7 @@ Without last parameter filename.csv script read standard input
         -d      set other then default delimiter ';' for .csv file
         -f      which of the columns will be displayed
                 1-3 or 1:3 are same for range of values
+                5: and 5- means from column 5 to last column
                 4,2,8 columns for selection
                 id,name,age columns for selection by name
         -n      delimiter for output, usefull for conversion format
@@ -51,6 +52,7 @@ $0 -d '\\t' -f 1:3
 $0 -d '\\t' -n ':' -f 1:3
 $0 -f id,name,age
 $0 -r name,date,address -i
+$0 -f 3:
 
 END_HELP
 }

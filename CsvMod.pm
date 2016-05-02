@@ -88,7 +88,7 @@ sub which_columns($$) {
     if($arg =~ /[a-zA-ZľščťžýáíéúňôĽŠČŤŽÝÁÍÉÚŇÔ]/) {
         @positions = &columns_by_name($arg, \@$head);
     } else {
-        @positions = &columns_by_number($arg);
+        @positions = &columns_by_number($arg, \@$head);
     }
 
 return @positions;
@@ -209,8 +209,8 @@ return @indexes;
 }
 
 
-sub columns_by_number($) {
-    my($arg) = @_;
+sub columns_by_number($$) {
+    my($arg, $head) = @_;
 
     my @positions = ();
 
@@ -222,12 +222,16 @@ sub columns_by_number($) {
     }
     elsif($arg =~ /:/) {  # range of values
         my($low, $high) = split(/:/, $arg, -1); 
+        # for x: definition high is maximum
+        $high = @{$head} unless $high;
         for(my $i = ($low - 1); $i < $high; $i++) {
             push(@positions, $i);
         }
     }
     elsif($arg =~ /-/) {  # range of values
         my($low, $high) = split(/-/, $arg, -1); 
+        # for x- definition high is maximum
+        $high = @{$head} unless $high;
         for(my $i = ($low - 1); $i < $high; $i++) {
             push(@positions, $i);
         }
