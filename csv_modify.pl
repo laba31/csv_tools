@@ -11,7 +11,7 @@ BEGIN {
 use strict;
 use CsvMod;
 use Getopt::Std;
-getopts('hbr:f:');
+getopts('hbr:f:i');
 
 
 # my favorit delimiter
@@ -24,6 +24,7 @@ my $line = undef;
 my @columns = undef;
 # temporary file for changes
 my $work_file = undef;
+my $case_sensitive = -1;
 
 
 sub help() {
@@ -44,7 +45,12 @@ $0 -r '/YES/NO/' -f 2-6     same as previous example
 $0 -r '/YES/NO/' -f 2:      string NO replacing string YES from column 2 to last column
 $0 -r '/YES/NO/' -f 2-      same as previous example
 
-$0 -r '/.*//' -f 1          delete value in whole column 1
+$0 -r '/super/Special95/' -f long -i -b
+                            string Special95 replacing string super in all columns with "long" text in name ignoring case sensitive
+$0 -r '/^.*\$/100000/' -f num -i  semicolon.csv
+                            setting values on 100000 in all columns with "num" text in name ignoring case sensitive
+
+$0 -r '/.*//' -f 1           delete value in whole column 1
 $0 -r '/^.*\$/YES/' -f 1     everything setting on YES, including empty value
 
 END_OF_HELP
@@ -67,6 +73,11 @@ if($::opt_d) {
         $delimiter=$::opt_d;
 }
 
+if($::opt_i) {
+    $case_sensitive = 1;
+}
+
+
 # .csv filename is required too
 if(@ARGV == 1) {
     open(FD, $ARGV[0]) or die "I can not open file $ARGV[0]\n";
@@ -88,7 +99,12 @@ print WD $line;
 @head = &parse_line($delimiter, $line);
 
 # which columns selected
-@columns = &which_columns($::opt_f, \@head);
+if ($::opt_f =~ /[a-zA-Z]/) {
+    @columns = &which_columns_regexp($::opt_f, \@head, $case_sensitive);
+}
+else {
+    @columns = &which_columns($::opt_f, \@head);
+}
 
 # check range of columns
 if((&check_range(\@columns, \@head)) == -1) {
