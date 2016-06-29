@@ -194,7 +194,7 @@ sub which_columns_regexp($$$) {
     my @indexes = ();
 
     if($arg =~ /,/){  # values comma separated
-        my @columns_regexp = split(/,/, $arg, -1);
+        @columns_regexp = split(/,/, $arg, -1);
     }
     else {
         @columns_regexp = ();
