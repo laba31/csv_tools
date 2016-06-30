@@ -82,6 +82,10 @@ $line=<FD>;
 # header in array
 @head = &parse_line($delimiter, $line);
 $num_head_columns = @head;
+# numbering columns if has'nt name in header
+for(my $i = 0; $i < $num_head_columns; $i++) {
+    $head[$i] = ($i + 1) if(! $head[$i]);
+}
 
 if($num_head_columns < 2) {
     print "CSV with less the 2 columns?\n";
