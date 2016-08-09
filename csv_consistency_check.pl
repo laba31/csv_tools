@@ -112,6 +112,7 @@ while($line=<FD>) {
         my $column = 1;
         foreach my $item (@line_items) {
             if($check_empty_column and (($item eq "") or ($item eq"\"\""))) {
+                print "\"$item\"\t";
                 if($ncol) {
                     print "row $line_position column $column is empty\n";
                 }
@@ -121,6 +122,7 @@ while($line=<FD>) {
                 $err = 1;
             }
             elsif($check_white_chars and ($item =~ /^\s+$/)) {
+                print "\"$item\"\t";
                 if($ncol) {
                     print "row $line_position column $column included only white characters\n";
                 }
