@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #Author: Ladislav Babjak
-#VERSION: 1.0
+#VERSION: 1.1
 
 # calling module from everywhere
 BEGIN {
